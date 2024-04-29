@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup as bs
+import os
 from sys import argv
 
 class TagContext(object):
@@ -28,6 +29,7 @@ class TagContext(object):
         return print('\n'+self.subset[self.currentTag].get(attr)+'\n')
 
     def setCurrentTag(self):
+        self.printself()
         self.currentTag = int(input("New Tag Number > "))
 
 
@@ -37,6 +39,7 @@ class TagContext(object):
                 print(" >>\t"+str(self.subset[i]))
             else:
                 print(str(i)+' - '+str(self.subset[i]))
+
 
 
 def MainLoop(htmlsource):
@@ -58,14 +61,21 @@ def MainLoop(htmlsource):
         print("[2] Select Individual Tag")
         print("[3] Extract Tag Attribute")
         print("[X] Exit\n")
-        command = int(input("cmd: "))
+
+        command = input("cmd: ")
+
+        os.system("clear")
 
         if command == "x" or command == "X":
             break
 
+        if not command.isnumeric():
+            continue
+
+        command = int(command)
+
+
         cmdContext[command]()
-
-
 
 
 if __name__ == "__main__":
