@@ -64,7 +64,6 @@ def MainLoop(htmlsource):
 
         command = input("cmd: ")
 
-        os.system("clear")
 
         if command == "x" or command == "X":
             break
@@ -74,6 +73,7 @@ def MainLoop(htmlsource):
 
         command = int(command)
 
+        os.system("clear")
 
         cmdContext[command]()
 
