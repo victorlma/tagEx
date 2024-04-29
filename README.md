@@ -1,6 +1,6 @@
 # tagEx
 
-Small cli utility to explore tags from html file written in python.
+Small cli utility to explore tags from html files written in python.
 
 ## Install
 
