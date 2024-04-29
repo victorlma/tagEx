@@ -7,7 +7,7 @@ class TagContext(object):
         self.htmlsource = htmlsource 
         self.bs = self.bsInit()
         self.currentTag = 0
-        self.subset = ''
+        self.subset = '' 
         pass
 
     def bsInit(self):
@@ -19,26 +19,53 @@ class TagContext(object):
     def htmlfromUrl(self):
         pass
 
-    def setSubset(self, tag):
+    def setSubset(self):
+        tag = input("Tag Group to Check > ")
         self.subset = self.bs.find_all(tag)
 
-    def getAttrib(self, attr):
-        return self.subset[self.currentTag].get(attr)
+    def getAttrib(self):
+        attr = input("Attr > ")
+        return print('\n'+self.subset[self.currentTag].get(attr)+'\n')
 
-def printcontext(context):
-    for i in range(len(context.subset)):
-        if i == context.currentTag:
-            print(" >>\t"+str(context.subset[i]))
-        else:
-            print(str(i)+' - '+str(context.subset[i]))
+    def setCurrentTag(self):
+        self.currentTag = int(input("New Tag Number > "))
+
+
+    def printself(self):
+        for i in range(len(self.subset)):
+            if i == self.currentTag:
+                print(" >>\t"+str(self.subset[i]))
+            else:
+                print(str(i)+' - '+str(self.subset[i]))
 
 
 def MainLoop(htmlsource):
+
+
     context = TagContext(htmlsource)
-    context.setSubset(input("Tag to Check >  "))
+    context.setSubset()
+    cmdContext = {0:context.printself,
+                  1:context.setSubset,
+                  2:context.setCurrentTag,
+                  3:context.getAttrib
+                  }
+
+    context.printself()
+
+    while True:
+        print("[0] Print Selected Tags")
+        print("[1] Select New Tag Group to Check")
+        print("[2] Select Individual Tag")
+        print("[3] Extract Tag Attribute")
+        print("[X] Exit\n")
+        command = int(input("cmd: "))
+
+        if command == "x" or command == "X":
+            break
+
+        cmdContext[command]()
 
 
-    printcontext(context)
 
 
 if __name__ == "__main__":
