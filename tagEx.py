@@ -20,17 +20,15 @@ class TagContext(object):
     def htmlfromUrl(self):
         pass
 
-    def setSubset(self):
-        tag = input("Tag Group to Check > ")
+    def setSubset(self, tag):
         self.subset = self.bs.find_all(tag)
 
-    def getAttrib(self):
-        attr = input("Attr > ")
-        return print('\n'+self.subset[self.currentTag].get(attr)+'\n')
+    def getAttrib(self, attr):
+        return self.subset[self.currentTag].get(attr)
 
-    def setCurrentTag(self):
+    def setCurrentTag(self, tagNumber):
         self.printself()
-        self.currentTag = int(input("New Tag Number > "))
+        self.currentTag = tagNumber
 
 
     def printself(self):
@@ -40,42 +38,67 @@ class TagContext(object):
             else:
                 print(str(i)+' - '+str(self.subset[i]))
 
+class UI(object):
+    close = 0
 
-
-def MainLoop(htmlsource):
-
-
-    context = TagContext(htmlsource)
-    context.setSubset()
-    cmdContext = {0:context.printself,
-                  1:context.setSubset,
-                  2:context.setCurrentTag,
-                  3:context.getAttrib
+    def __init__(self, context):
+        self.context = context
+        self.cmd = {0:self.context.printself,
+                  1:self.setContextSubset,
+                  2:self.setContextCurrentTag,
+                  3:self.getContextAttrib
                   }
 
-    context.printself()
+    def handleCmd(self):
+        command = input("cmd: ")
 
-    while True:
+        if command == "x" or command == "X":
+            self.close = 1
+
+        if not command.isnumeric():
+            return
+        
+        command = int(command)
+
+        os.system("clear")
+
+        self.cmd[command]()
+
+    def printOpts(self):
         print("[0] Print Selected Tags")
         print("[1] Select New Tag Group to Check")
         print("[2] Select Individual Tag")
         print("[3] Extract Tag Attribute")
         print("[X] Exit\n")
 
-        command = input("cmd: ")
+    def setContextSubset(self):
+        tag = input("Tag Group to Check > ")
+        self.context.setSubset(tag)
+
+    def setContextCurrentTag(self):
+        tagNumber = int(input("New Tag Number > "))
+        self.context.setCurrentTag(tagNumber)
+
+    def getContextAttrib(self):
+        attr = str(input("Attr > "))
+        print('\n'+ self.context.getAttrib(attr) + '\n')
 
 
-        if command == "x" or command == "X":
-            break
+def MainLoop(htmlsource):
 
-        if not command.isnumeric():
-            continue
 
-        command = int(command)
+    context = TagContext(htmlsource)
 
-        os.system("clear")
 
-        cmdContext[command]()
+    ui = UI(context)
+    ui.setContextSubset()
+
+    context.printself()
+
+    while not ui.close:
+
+        ui.printOpts()
+        ui.handleCmd()
 
 
 if __name__ == "__main__":
@@ -84,4 +107,12 @@ if __name__ == "__main__":
         print("Pass an html source (file or url)")
         exit(1)
 
-    MainLoop(argv[1])
+
+    if len(argv) == 2:
+        MainLoop(argv[1])
+
+    if len(argv) == 4:
+        context = TagContext(argv[1])
+        context.setSubset(argv[2])
+        print(context.getAttrib(argv[3]))
+
