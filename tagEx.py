@@ -6,10 +6,10 @@ import requests as rq
 class TagContext(object):
 
     def __init__(self, htmlsource):
-        self.htmlsource = htmlsource 
+        self.htmlsource = htmlsource
         self.bs = self.bsInit()
         self.currentTag = 0
-        self.subset = '' 
+        self.subset = ''
 
     def bsInit(self):
 
@@ -23,7 +23,7 @@ class TagContext(object):
 
     def htmlfromUrl(self):
         return rq.get(self.htmlsource).text
-        
+
     def setSubset(self, tag):
         self.subset = self.bs.find_all(tag)
 
@@ -36,16 +36,16 @@ class TagContext(object):
         return result
 
     def setCurrentTag(self, tagNumber):
-        self.printself()
         self.currentTag = tagNumber
+        self.printself()
 
 
     def printself(self):
         for i in range(len(self.subset)):
             if i == self.currentTag:
-                print(" >>\t"+str(self.subset[i]))
+                print("\n << " + str(i) + " >>  " + str(self.subset[i]))
             else:
-                print(str(i)+' - '+str(self.subset[i]))
+                print('\n'+str(i)+' - '+str(self.subset[i]))
 
 class UI(object):
     close = 0
@@ -66,7 +66,7 @@ class UI(object):
 
         if not command.isnumeric():
             return
-        
+
         command = int(command)
 
         os.system("clear")
@@ -74,25 +74,25 @@ class UI(object):
         self.cmd[command]()
 
     def printOpts(self):
-        print("[0] Print Selected Tags")
+        print("\n[0] Print Selected Tags")
         print("[1] Select New Tag Group to Check")
         print("[2] Select Individual Tag")
         print("[3] Extract Tag Attribute")
         print("[X] Exit\n")
 
     def setContextSubset(self):
-        tag = input("Tag Group to Check > ")
+        tag = input("\nTag Group to Check > ")
         self.context.setSubset(tag)
 
         if (not self.context.subset):
             print("\nNo Tag Group Found")
 
     def setContextCurrentTag(self):
-        tagNumber = int(input("New Tag Number > "))
+        tagNumber = int(input("\nNew Tag Number > "))
         self.context.setCurrentTag(tagNumber)
 
     def getContextAttrib(self):
-        attr = str(input("Attr > "))
+        attr = str(input("\nAttr > "))
         print('\n'+ self.context.getAttrib(attr) + '\n')
 
 
