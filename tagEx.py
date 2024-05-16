@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup as bs
 import os
 from sys import argv
+import requests as rq
 
 class TagContext(object):
 
@@ -9,16 +10,20 @@ class TagContext(object):
         self.bs = self.bsInit()
         self.currentTag = 0
         self.subset = '' 
-        pass
 
     def bsInit(self):
-        with open(self.htmlsource, 'r') as f:
-            conn = bs(f.read(), 'html5lib')
+
+        try:
+            conn = bs(self.htmlfromUrl(), 'html5lib')
+        except:
+            with open(self.htmlsource, 'r') as f:
+                conn = bs(f.read(), 'html5lib')
 
         return conn
 
     def htmlfromUrl(self):
-        pass
+        return rq.get(self.htmlsource).text
+        
 
     def setSubset(self, tag):
         self.subset = self.bs.find_all(tag)
