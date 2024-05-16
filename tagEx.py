@@ -24,12 +24,16 @@ class TagContext(object):
     def htmlfromUrl(self):
         return rq.get(self.htmlsource).text
         
-
     def setSubset(self, tag):
         self.subset = self.bs.find_all(tag)
 
     def getAttrib(self, attr):
-        return self.subset[self.currentTag].get(attr)
+
+        try:
+            result = self.subset[self.currentTag].get(attr)
+        except:
+            result = "No Attrib Found"
+        return result
 
     def setCurrentTag(self, tagNumber):
         self.printself()
@@ -79,6 +83,9 @@ class UI(object):
     def setContextSubset(self):
         tag = input("Tag Group to Check > ")
         self.context.setSubset(tag)
+
+        if (not self.context.subset):
+            print("\nNo Tag Group Found")
 
     def setContextCurrentTag(self):
         tagNumber = int(input("New Tag Number > "))
